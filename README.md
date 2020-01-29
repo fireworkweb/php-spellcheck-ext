@@ -64,9 +64,9 @@ if(! $hunspell->check("Somethong")) {
 It's is provided some options before building the extension that must be changed depending on you PHP version or operational system.
 
 ### Variables:
-- INSTALL_INI - Decides if the installation steps will copy or not the .ini file inside INI_DIR. Defaults to ON.
+- `INSTALL_INI` - Decides if the installation steps will copy or not the `.ini` file inside `INI_DIR`. Defaults to ON.
 
-- INI_DIR - Path of PHP modules .ini directory, this may change depending on your PHP version. Defaults to "/etc/php/7.0/mods-available".
+- `INI_DIR` - Path of PHP modules .ini directory, this may change depending on your PHP version. Defaults to `"/etc/php/7.0/mods-available"`.
 
 These variables can be set while calling `cmake` at the building steps:
 
