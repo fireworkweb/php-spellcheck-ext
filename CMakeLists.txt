@@ -5,16 +5,27 @@ INCLUDE(GNUInstallDirs)
 
 SET(CMAKE_CXX_STANDARD 11)
 
-SET(INI_FILE "hunspell-ext.ini")
-SET(
-    INI_DIR
-    "/etc/php/7.2/mods-available"
-    CACHE
-    STRING
-    "Folder where PHP modules .ini files are store (check you PHP version)."
+OPTION(
+    INSTALL_INI
+    "Decides if this should install the extension .ini file while installing this extension."
+    ON
 )
 
-MESSAGE("-- INI_DIR set to ${INI_DIR}")
+IF(INSTALL_INI)
+    SET(INI_FILE "hunspell-ext.ini")
+    SET(
+        INI_DIR
+        "/etc/php/7.0/mods-available"
+        CACHE
+        STRING
+        "Folder where PHP modules .ini files are store (check you PHP version)."
+    )
+
+    MESSAGE("-- INI_DIR set to ${INI_DIR}")
+ELSE()
+    MESSAGE("-- INSTALL_INI is set to OFF, this will not install this extesion .ini file.")
+ENDIF()
+
 
 EXECUTE_PROCESS(
     COMMAND 
@@ -76,11 +87,13 @@ INSTALL(
     DESTINATION "${EXTENSION_DIR}"
 )
 
-INSTALL(
-    FILES
-    "${INI_FILE}"
-    DESTINATION "${INI_DIR}"
-)
+IF(INSTALL_INI)
+    INSTALL(
+        FILES
+        "${INI_FILE}"
+        DESTINATION "${INI_DIR}"
+    )
+ENDIF()
 
 INSTALL(
     DIRECTORY "include/"

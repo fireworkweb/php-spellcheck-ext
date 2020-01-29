@@ -20,4 +20,6 @@ class HunspellExt : public Php::Base
         Php::Value check(Php::Parameters &params);
 
         Php::Value suggest(Php::Parameters &params);
+
+        Php::Value getWordChars();
 };

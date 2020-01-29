@@ -27,3 +27,8 @@ Php::Value HunspellExt::suggest(Php::Parameters &params)
 
     return std::vector<std::string>(suggestions, suggestions + count);
 }
+
+Php::Value HunspellExt::getWordChars()
+{
+    return _hunspell->get_wordchars_cpp();
+}

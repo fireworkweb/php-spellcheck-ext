@@ -18,6 +18,8 @@ extern "C" {
         // for the entire duration of the process (that's why it's static)
         static Php::Extension extension("hunspell-ext", "1.0");
 
+        Php::Namespace extNamespace("FireworkWeb");
+
         Php::Class<HunspellExt> extClass("HunspellExt");
 
         extClass.method<&HunspellExt::__construct>("__construct", {
@@ -35,8 +37,11 @@ extern "C" {
             Php::ByVal("word", Php::Type::String, true)
         });
 
-        // add the class to the extension
-        extension.add(std::move(extClass));
+        extClass.method<&HunspellExt::getWordChars>("getWordChars");
+
+        extNamespace.add(std::move(extClass));
+        
+        extension.add(std::move(extNamespace));
 
         // return the extension
         return extension;
