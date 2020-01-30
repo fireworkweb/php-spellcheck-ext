@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.1.0)
-PROJECT(hunspell-ext)
+PROJECT(php-hunspell-ext)
 
 INCLUDE(GNUInstallDirs)
 
@@ -64,7 +64,7 @@ TARGET_LINK_LIBRARIES(
     hunspell-ext
     PRIVATE
     phpcpp
-    hunspell-1.6
+    hunspell-1.7
 )
 
 SET_TARGET_PROPERTIES(

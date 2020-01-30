@@ -1,6 +1,5 @@
 #include <hunspell/hunspell.hxx>
 #include <phpcpp.h>
-
 #include <vector>
 
 class HunspellExt : public Php::Base
