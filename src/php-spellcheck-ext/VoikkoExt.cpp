@@ -27,12 +27,17 @@ Php::Value VoikkoExt::suggest(Php::Parameters &params)
 {
     char ** suggestions = voikkoSuggestCstr(_handle, params[0]);
 
-    int count = 0;
-    while (suggestions[count]){
-        count++;
+    if (suggestions) {
+        int count = 0;
+        
+        while (suggestions[count]){
+            count++;
+        }
+
+        return std::vector<std::string> (suggestions, suggestions + count);
     }
 
-    return std::vector<std::string> (suggestions, suggestions + count);
+    return std::vector<std::string>();
 }
 
 Php::Class<VoikkoExt> VoikkoExt::getPhpClass()
