@@ -5,7 +5,6 @@ This is a PHP module made in C++ to use Spellchecking libraries directly inside 
 Intead of using the Zend engine directly, was opted to use the [PHP-CPP](https://github.com/CopernicaMarketingSoftware/PHP-CPP) library, which makes everything easier to work with development of PHP C++ extensions.
 
 ## Dependencies
----
 
 Required build dependencies:
 ```bash
@@ -30,7 +29,6 @@ libhunspell-1.7 libvoikko
 [PHP-CPP](https://github.com/CopernicaMarketingSoftware/PHP-CPP), [Hunspell](https://github.com/hunspell/hunspell) and [Voikko](https://github.com/voikko/corevoikko) libraries can be downloaded from their repositories.
 
 ## Build & Installation
----
 
 First it's needed to build the extension, this can be done by running these commands below:
 
@@ -90,7 +88,6 @@ if(! $voikko->check("Teskti")) {
 ```
 
 ## CMake build options
----
 
 It's is provided some options before building the extension that must be changed depending on you PHP version or operational system.
 
