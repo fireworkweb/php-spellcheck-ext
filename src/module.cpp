@@ -1,4 +1,13 @@
-#include <HunspellExt.hpp>
+#include <phpcpp.h>
+
+#ifdef ENABLE_HUNSPELL
+#include "php-spellcheck-ext/HunspellExt.hpp"
+#endif
+
+#ifdef ENABLE_VOIKKO
+#include "php-spellcheck-ext/VoikkoExt.hpp"
+#endif
+
 
 /**
  *  tell the compiler that the get_module is a pure C function
@@ -14,36 +23,26 @@ extern "C" {
      */
     PHPCPP_EXPORT void *get_module() 
     {
-        // static(!) Php::Extension object that should stay in memory
-        // for the entire duration of the process (that's why it's static)
-        static Php::Extension extension("hunspell-ext", "1.0");
+        static Php::Extension extension("spellcheck-ext", "1.0");
 
         Php::Namespace extNamespace("FireworkWeb");
+        Php::Namespace spellCheckNamespace("Spellcheck");
 
-        Php::Class<HunspellExt> extClass("HunspellExt");
+        #ifdef ENABLE_HUNSPELL
+        auto hunspell = std::move(HunspellExt::getPhpClass());
 
-        extClass.method<&HunspellExt::__construct>("__construct", {
-            Php::ByVal("dicPath", Php::Type::String, true),
-            Php::ByVal("affPath", Php::Type::String, true)
-        });
+        spellCheckNamespace.add(hunspell);
+        #endif
 
-        extClass.method<&HunspellExt::__destruct>("__destruct");
+        #ifdef ENABLE_VOIKKO
+        auto voikko = std::move(VoikkoExt::getPhpClass());
 
-        extClass.method<&HunspellExt::check>("check", {
-            Php::ByVal("word", Php::Type::String, true)
-        });
+        spellCheckNamespace.add(voikko);
+        #endif
         
-        extClass.method<&HunspellExt::suggest>("suggest", {
-            Php::ByVal("word", Php::Type::String, true)
-        });
-
-        extClass.method<&HunspellExt::getWordChars>("getWordChars");
-
-        extNamespace.add(std::move(extClass));
-        
+        extNamespace.add(std::move(spellCheckNamespace));
         extension.add(std::move(extNamespace));
 
-        // return the extension
         return extension;
     }
 }
