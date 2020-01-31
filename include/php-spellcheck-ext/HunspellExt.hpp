@@ -9,16 +9,14 @@ class HunspellExt : public Php::Base
         
     public:
         HunspellExt() = default;
-
         virtual ~HunspellExt() = default;
 
         void __construct(Php::Parameters &params);
-
         void __destruct();
 
         Php::Value check(Php::Parameters &params);
-
         Php::Value suggest(Php::Parameters &params);
-
         Php::Value getWordChars();
+
+        static Php::Class<HunspellExt> getPhpClass();
 };
