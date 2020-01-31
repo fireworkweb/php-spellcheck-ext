@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.1.0)
-PROJECT(php-hunspell-ext)
+PROJECT(php-spellcheck-ext)
 
 INCLUDE(GNUInstallDirs)
 
@@ -11,8 +11,20 @@ OPTION(
     ON
 )
 
+OPTION(
+    ENABLE_HUNSPELL
+    "Decides if libhunspell should be used as a backend."
+    ON
+)
+
+OPTION(
+    ENABLE_VOIKKO
+    "Decides if libvoikko (Finnish) should be used as a backend."
+    OFF
+)
+
 IF(INSTALL_INI)
-    SET(INI_FILE "hunspell-ext.ini")
+    SET(INI_FILE "php-spellcheck-ext.ini")
     SET(
         INI_DIR
         "/etc/php/7.0/mods-available"
@@ -37,52 +49,69 @@ EXECUTE_PROCESS(
 FILE(
     GLOB
     SOURCES
-    "src/*.cpp"
+    "src/php-spellcheck-ext/*.cpp"
+    "src/module.cpp"
 )
 
 FILE(
     GLOB
     HEADERS
-    "include/*.hpp"
+    "include/php-spellcheck-ext/*.hpp"
 )
 
 INCLUDE_DIRECTORIES("include")
 
 ADD_LIBRARY(
-    hunspell-ext
+    php-spellcheck-ext
     SHARED
     "${SOURCES}"
 )
 
 TARGET_COMPILE_OPTIONS(
-    hunspell-ext
+    php-spellcheck-ext
     PRIVATE
     -Wall -O2 -fpic
 )
 
 TARGET_LINK_LIBRARIES(
-    hunspell-ext
+    php-spellcheck-ext
     PRIVATE
     phpcpp
-    hunspell-1.7
 )
 
+IF(ENABLE_HUNSPELL)
+    MESSAGE("-- libhunpell will be enabled.")
+
+    ADD_DEFINITIONS(-DENABLE_HUNSPELL)
+
+    TARGET_LINK_LIBRARIES(
+        php-spellcheck-ext
+        PRIVATE
+        hunspell-1.7
+    )
+ENDIF()
+
+IF(ENABLE_VOIKKO)
+    MESSAGE("-- libvoikko will be enabled.")
+
+    ADD_DEFINITIONS(-DENABLE_VOIKKO)
+
+    TARGET_LINK_LIBRARIES(
+        php-spellcheck-ext
+        PRIVATE
+        voikko
+    )
+ENDIF()
+
 SET_TARGET_PROPERTIES(
-    hunspell-ext
+    php-spellcheck-ext
     PROPERTIES
     PREFIX ""
 )
 
-TARGET_INCLUDE_DIRECTORIES(
-    hunspell-ext 
-    PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
-
 INSTALL(
     TARGETS
-    hunspell-ext
+    php-spellcheck-ext
     LIBRARY
     DESTINATION "${EXTENSION_DIR}"
 )
@@ -94,8 +123,3 @@ IF(INSTALL_INI)
         DESTINATION "${INI_DIR}"
     )
 ENDIF()
-
-INSTALL(
-    DIRECTORY "include/"
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-)
